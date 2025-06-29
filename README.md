@@ -24,3 +24,7 @@ The general followed Steps were as followed:
         ```
 5. Add your SSH-private-key to your GH-repository as a ${{ SECRET }} and use that
     secret in your workflows as you see fit (to connect to the Remote Server - AWS EC2 instance).
+
+Extra references:
+    * https://codigofacilito.com/articulos/autenticacion_servidores_remotos
+    * https://www.ssh.com/academy/ssh/copy-id#copy-the-key-to-a-server

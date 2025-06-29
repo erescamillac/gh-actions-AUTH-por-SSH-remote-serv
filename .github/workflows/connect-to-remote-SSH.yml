@@ -1,0 +1,31 @@
+name: Workflow to connect to remote server through SSH
+
+on: [push]
+
+jobs:
+  connect-to-remote-ssh-manual:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Private-SSH-Key and known_hosts on Runner (manually)
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY_AWS_EC2 }}" > ~/.ssh/id_rsa_aws_ec2
+          chmod 600 ~/.ssh/id_rsa_aws_ec2
+          ssh-keyscan -H 18.220.75.76 >> ~/.ssh/known_hosts
+      - name: Manual SSH Connection to AWS EC2 Instance and Command Execution
+        run: |
+          ssh -i ~/.ssh/id_rsa_aws_ec2 ubuntu@18.220.75.76 "mkdir -p /home/ubuntu/directory_from_gh_actions_man_workflow && echo 'Hello from GitHub Actions! (manual)' > /home/ubuntu/directory_from_gh_actions_man_workflow/hello-eec.txt"
+  connect-to-remote-ssh-with-ssh-action:
+    runs-on: ubuntu-latest
+    steps:
+      # Using PRIVATE-key authentication
+      - name: Connect to remote server via SSH (ssh-action)
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: 18.220.75.76
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE_KEY_AWS_EC2 }}
+          port: 22
+          script: |
+            mkdir ~/dir_from_ssh_action_workflow_AUTO
+            echo 'Hello from GitHub Actions! (ssh-action AUTO)' > ~/dir_from_ssh_action_workflow_AUTO/hello-eec-AUTO.txt
